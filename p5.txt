@@ -90,7 +90,7 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Podrías identificar las diferencias entre el primer intento y el segundo de registro? (fíjate en el tamaño de los paquetes y mira a qué se debe el cambio)
  	El paquete de la línea 46 ocupa 523bytes y el paquete de la línea 51 ocupa 712 bytes. El primero no tiene el campo Authorization
  ** ¿Cuánto es el valor del tiempo de expiración de la sesión? Indica las unidades.
- 	3600 segundos --> Expires: 3600 
+ 	3600 segundos --> Expires: 3600
 
 
 10. Una vez registrados, podemos efectuar una llamada. Vamos a probar con el servicio de eco de Ekiga que nos permite comprobar si nos hemos conectado correctamente. El servicio de eco tiene la dirección sip:500@ekiga.net. Veamos el INVITE de cerca.
@@ -157,14 +157,19 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
 
 15. Identifica la trama donde se finaliza la conversación.
  ** ¿Qué método SIP se utiliza?
+    Session Initiation Protocol (BYE)
  ** ¿En qué trama(s)?
+    924,925,927,933
  ** ¿Por qué crees que se envía varias veces?
-
+    Porque hasta el paquete 938 no recibe el 200 OK
 
 16. Finalmente, se cierra la aplicación de VozIP.
  ** ¿Por qué aparece una instrucción SIP del tipo REGISTER?
+    Para darse de baja
  ** ¿En qué trama sucede esto?
+    952
  ** ¿En qué se diferencia con la instrucción que se utilizó con anterioridad (al principio de la sesión)?
+    Campo expires --> Expires: 0
 
 
 

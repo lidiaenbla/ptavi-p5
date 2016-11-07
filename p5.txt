@@ -40,12 +40,13 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
 
 5. Analiza las primeras cuatro tramas de la captura nada más arrancar Ekiga.
  ** ¿Qué servicio es el utilizado en estas tramas?
- 	servicio de nombres
+ 	servicio de nombres, servicio DNS
  ** ¿Cuál es la dirección IP del servidor de nombres del ordenador que ha lanzado Ekiga?
  	80.58.61.250
  ** ¿Qué dirección IP (de ekiga.net) devuelve el servicio de nombres?
  	86.64.162.35
  ** ¿Por qué se pide también para 35.162.64.86.in-addr.arpa?
+ 	Para poder recibir el nombre de la máquina a través de la IP
 
 
 6. A continuación, hay más de una docena de tramas TCP/HTTP.
@@ -56,7 +57,7 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Qué devuelve el servidor?
  	Primero un ACK y luego un fichero html con este texto: 83.36.48.212
  ** Si lanzamos el navegador web, por ejemplo, Mozilla Firefox, y vamos a la misma URL, ¿qué recibimos? ¿Qué es, entonces, lo que está respondiendo el servidor?
- 	Si copiamos la url en el navegador, nos imprime el fichero de texto que contiene la ip 62.83.14.197
+ 	Si copiamos la url en el navegador, nos imprime el fichero de texto que contiene la ip 62.83.14.197(IP pública)
 
 
 7. Hasta la trama 45 se puede observar una secuencia de tramas del protocolo STUN.
@@ -69,7 +70,7 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
 8. La trama 46 es la primera trama SIP. En un entorno como el de Internet, lo habitual es desconocer la dirección IP de la otra parte al realizar una llamada. Por eso, todo usuario registra su localización en un servidor Registrar. El Registrar guarda información sobre los usuarios en un servidor de localización que puede ser utilizado para localizar usuarios.
 	Via: SIP/2.0/UDP 83.36.48.212:5063;branch=z9hG4bKced27353-b29e-db11-82ee-0013ce8c7c2b;rport
  ** ¿Qué dirección IP tiene el servidor Registrar?
- 	83.36.48.212
+ 	86.64.162.35
  ** ¿A qué puerto (del servidor Registrar) se envían los paquetes SIP?
  	5063
  ** ¿Qué método SIP utiliza el UA para registrarse?
@@ -87,6 +88,7 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Cómo sabemos si el registro se ha realizado correctamente o no?
  	Cuando pone --> Status-Line: SIP/2.0 200 OK
  ** ¿Podrías identificar las diferencias entre el primer intento y el segundo de registro? (fíjate en el tamaño de los paquetes y mira a qué se debe el cambio)
+ 	El paquete de la línea 46 ocupa 523bytes y el paquete de la línea 51 ocupa 712 bytes. El primero no tiene el campo Authorization
  ** ¿Cuánto es el valor del tiempo de expiración de la sesión? Indica las unidades.
  	3600 segundos --> Expires: 3600 
 
@@ -95,19 +97,26 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Puede verse el nombre del que efectúa la llamada, así como su dirección SIP?
  	Si --> From: "Gregorio Robles" <sip:grex@ekiga.net>;tag=621be956-b29e-db11-82ee-0013ce8c7c2b
  ** ¿Qué es lo que contiene el cuerpo de la trama? ¿En qué formato/protocolo está?
- 	Contiene la información anterior(nombre y dirección SIP del que efectúa la llamada). Esta en SIP/SDP
+ 	Contiene la información anterior(nombre y dirección SIP del que efectúa la llamada).
+ 	(Session Description Protocol) Esta en SIP/SDP
  ** ¿Tiene éxito el primer intento? ¿Cómo lo sabes?
  	No --> Status-Line: SIP/2.0 407 Proxy Authentication Required
  ** ¿En qué se diferencia el segundo INVITE más abajo del primero? ¿A qué crees que se debe esto?
-
+ 	El primero no tiene el campo de autentificación y el segundo si
 
 11. Una vez conectado, estudia el intercambio de tramas.
  ** ¿Qué protocolo(s) se utiliza(n)? ¿Para qué sirven estos protocolos?
- 	Se utilizan RTP y el H.261 que es una estándar de vídeo.
+ 	Se utilizan RTP(nivel de sesión para la transmisión en tiempo real) y el H.261(estándar de vídeo).
  ** ¿Cuál es el tamaño de paquete de los mismos?
+ 	RTP --> 214 bytes
+ 	H.261 --> entre los 205bytes y los 1077bytes aproximadamente
  ** ¿Se utilizan bits de padding?
+ 	No -->..0. .... = Padding: False
  ** ¿Cuál es la periodicidad de los paquetes que se envían?
+ 	RTP --> varía
+ 	H.261 --> 3600segundos
  ** ¿Cuántos bits/segundo estamos enviando?
+ 	64kbps
 
 
 
